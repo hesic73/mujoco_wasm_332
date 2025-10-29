@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.2)
 project(mujoco_wasm)
 
+set(CMAKE_CXX_STANDARD 17)
+
 set(SOURCE_FILES main.genned.cc)
 add_compile_options(-pthread)
 set(EMCC_LINKER_FLAGS "-s ASSERTIONS=1 --bind -s ALLOW_MEMORY_GROWTH=1 -s EXPORT_ES6=1 -s MODULARIZE=1 -s FORCE_FILESYSTEM=1 -s EXPORTED_RUNTIME_METHODS=['FS','MEMFS'] -s EXPORT_NAME=load_mujoco -s EXCEPTION_CATCHING_ALLOWED=['load_from_xml']")

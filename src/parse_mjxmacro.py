@@ -153,9 +153,11 @@ for line in model_lines:
         parts = line.split("//")
         parts = [part.strip() for part in parts]
         if len(parts[0]) > 0 and len(parts[0].split(" ")) > 0:
-            meat = parts[0].split(" ")[0].split(",")[0]; potatos = parts[1]
+            meat = parts[0].split(" ")[0].split(",")[0]
+            potatos = parts[1] if len(parts) > 1 else ""
             auto_gen_lines["model_enums"].append('      .value('+('"'+meat+'"').ljust(25)+', '+cur_enum_name.ljust(25)+'::'+meat.ljust(25)+')')
-            auto_gen_lines["enums_typescript"].append("    /** "+potatos.ljust(40)+" */")
+            if potatos:
+                auto_gen_lines["enums_typescript"].append("    /** "+potatos.ljust(40)+" */")
             auto_gen_lines["enums_typescript"].append("    "+meat.ljust(25)+",")
 
 
