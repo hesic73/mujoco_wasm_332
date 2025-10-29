@@ -153,6 +153,10 @@ async function loadSceneFromURL(mujoco, filename, parent) {
         geometry.setAttribute("normal", new THREE.BufferAttribute(normal_buffer, 3));
         geometry.setAttribute("uv", new THREE.BufferAttribute(uv_buffer, 2));
         geometry.setIndex(Array.from(triangle_buffer));
+        
+        // Force recompute normals to fix potential issues
+        geometry.computeVertexNormals();
+        
         meshes[meshID] = geometry;
       } else {
         geometry = meshes[meshID];
@@ -171,7 +175,8 @@ async function loadSceneFromURL(mujoco, filename, parent) {
     let materialProps = {
       color: new THREE.Color(color[0], color[1], color[2]),
       transparent: color[3] < 1.0,
-      opacity: color[3]
+      opacity: color[3],
+      side: THREE.DoubleSide  // Force double-sided rendering to fix normal issues
     };
     
     if (model.geom_matid[g] != -1) {

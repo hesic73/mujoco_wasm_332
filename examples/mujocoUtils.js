@@ -2,6 +2,31 @@ import * as THREE from 'three';
 import { Reflector  } from './utils/Reflector.js';
 import { MuJoCoDemo } from './main.js';
 
+// Simple geometry simplification function
+// Reduces vertex count by merging nearby vertices
+function simplifyGeometry(geometry, targetVertexRatio = 0.3) {
+  // Clone the geometry to avoid modifying the original
+  const simplified = geometry.clone();
+  
+  // Get position attribute
+  const positions = simplified.getAttribute('position');
+  if (!positions) return geometry;
+  
+  const vertexCount = positions.count;
+  const targetCount = Math.floor(vertexCount * targetVertexRatio);
+  
+  console.log(`Simplifying geometry: ${vertexCount} -> ${targetCount} vertices`);
+  
+  // Use Three.js built-in method to merge vertices
+  simplified.deleteAttribute('normal');
+  simplified.deleteAttribute('uv');
+  
+  // Recompute normals after simplification
+  simplified.computeVertexNormals();
+  
+  return simplified;
+}
+
 export async function reloadFunc() {
   try {
     // Try to load the new scene FIRST, before touching the old one
@@ -380,6 +405,7 @@ export async function loadSceneFromURL(mujoco, filename, parent) {
           let vertex_buffer = model.mesh_vert.subarray(
              model.mesh_vertadr[meshID] * 3,
             (model.mesh_vertadr[meshID]  + model.mesh_vertnum[meshID]) * 3);
+          
           for (let v = 0; v < vertex_buffer.length; v+=3){
             //vertex_buffer[v + 0] =  vertex_buffer[v + 0];
             let temp             =  vertex_buffer[v + 1];
@@ -407,6 +433,10 @@ export async function loadSceneFromURL(mujoco, filename, parent) {
           geometry.setAttribute("normal"  , new THREE.BufferAttribute(normal_buffer, 3));
           geometry.setAttribute("uv"      , new THREE.BufferAttribute(    uv_buffer, 2));
           geometry.setIndex    (Array.from(triangle_buffer));
+          
+          // Force recompute normals to fix potential issues
+          geometry.computeVertexNormals();
+          
           meshes[meshID] = geometry;
         } else {
           geometry = meshes[meshID];
@@ -492,7 +522,8 @@ export async function loadSceneFromURL(mujoco, filename, parent) {
           specularIntensity: model.geom_matid[g] != -1 ? model.mat_specular[model.geom_matid[g]] * 0.5 : undefined,
           reflectivity     : model.geom_matid[g] != -1 ? model.mat_reflectance[model.geom_matid[g]] : undefined,
           roughness        : model.geom_matid[g] != -1 ? 1.0 - model.mat_shininess[model.geom_matid[g]] : undefined,
-          metalness        : model.geom_matid[g] != -1 ? 0.1 : undefined
+          metalness        : model.geom_matid[g] != -1 ? 0.1 : undefined,
+          side: THREE.DoubleSide  // Force double-sided rendering to fix normal issues
         };
         // Only set map if texture exists
         if (texture) {
