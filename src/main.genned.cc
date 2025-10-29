@@ -190,7 +190,7 @@ public:
   void   crbCalculate        (                    ) { return mj_crb                      (_model->ptr(), _state->ptr()); }
   void   factorM             (                    ) { return mj_factorM                  (_model->ptr(), _state->ptr()); }
   void   solveM              (val x, val y, int n ) { return mj_solveM                   (_model->ptr(), _state->ptr(), reinterpret_cast<mjtNum*>(x["byteOffset"].as<int>()), reinterpret_cast<mjtNum*>(y["byteOffset"].as<int>()), n); }
-  void   solveM2             (val x, val y, int n ) { return mj_solveM2                  (_model->ptr(), _state->ptr(), reinterpret_cast<mjtNum*>(x["byteOffset"].as<int>()), reinterpret_cast<mjtNum*>(y["byteOffset"].as<int>()), n); }
+  void   solveM2             (val x, val y, val sqrtInvD, int n) { return mj_solveM2                  (_model->ptr(), _state->ptr(), reinterpret_cast<mjtNum*>(x["byteOffset"].as<int>()), reinterpret_cast<mjtNum*>(y["byteOffset"].as<int>()), reinterpret_cast<mjtNum*>(sqrtInvD["byteOffset"].as<int>()), n); }
   void   comVel              (                    ) { return mj_comVel                   (_model->ptr(), _state->ptr()); }
   void   passive             (                    ) { return mj_passive                  (_model->ptr(), _state->ptr()); }
   void   subtreeVel          (                    ) { return mj_subtreeVel               (_model->ptr(), _state->ptr()); }
@@ -231,8 +231,6 @@ public:
   void   _clearHandlers      (                    ) { return mju_clearHandlers           (                    ); }
   void   warning             (int warning, int info) { return mj_warning                  (_state->ptr(), warning, info); }
   void   _writeLog           (std::string type, std::string msg) { return mju_writeLog                (type.c_str(), msg.c_str()); }
-  int    activate            (std::string filename) { return mj_activate                 (filename.c_str()    ); }
-  void   deactivate          (                    ) { return mj_deactivate               (                    ); }
   void   _zero               (val res, int n      ) { return mju_zero                    (reinterpret_cast<mjtNum*>(res["byteOffset"].as<int>()), n); }
   void   _fill               (val res, mjtNum val, int n) { return mju_fill                    (reinterpret_cast<mjtNum*>(res["byteOffset"].as<int>()), val, n); }
   void   _copy               (val res, val data, int n) { return mju_copy                    (reinterpret_cast<mjtNum*>(res["byteOffset"].as<int>()), reinterpret_cast<mjtNum*>(data["byteOffset"].as<int>()), n); }
@@ -689,8 +687,6 @@ EMSCRIPTEN_BINDINGS(mujoco_wasm) {
       .function("_clearHandlers"        , &Simulation::_clearHandlers        )
       .function("warning"               , &Simulation::warning               )
       .function("_writeLog"             , &Simulation::_writeLog             )
-      .function("activate"              , &Simulation::activate              )
-      .function("deactivate"            , &Simulation::deactivate            )
       .function("_zero"                 , &Simulation::_zero                 , allow_raw_pointers())
       .function("_fill"                 , &Simulation::_fill                 , allow_raw_pointers())
       .function("_copy"                 , &Simulation::_copy                 , allow_raw_pointers())
@@ -790,7 +786,7 @@ EMSCRIPTEN_BINDINGS(mujoco_wasm) {
       .field("timeconst"  , &mjLROpt::timeconst)  // time constant for velocity reduction; min 0.01
       .field("timestep"   , &mjLROpt::timestep)   // simulation timestep; 0: use mjOption.timestep
       .field("inttotal"   , &mjLROpt::inttotal)   // total simulation time interval
-      .field("inteval"    , &mjLROpt::inteval)    // evaluation time interval (at the end)
+      .field("interval"   , &mjLROpt::interval)   // evaluation time interval (at the end)
       .field("tolrange"   , &mjLROpt::tolrange);  // convergence tolerance (relative to range)
 
   value_object<mjOption>("mjOption")
@@ -798,8 +794,9 @@ EMSCRIPTEN_BINDINGS(mujoco_wasm) {
       .field("apirate"             , &mjOption::apirate)           // update rate for remote API (Hz)
       .field("impratio"            , &mjOption::impratio)          // ratio of friction-to-normal contact impedance
       .field("tolerance"           , &mjOption::tolerance)         // main solver tolerance
+      .field("ls_tolerance"        , &mjOption::ls_tolerance)      // CG/Newton linesearch tolerance
       .field("noslip_tolerance"    , &mjOption::noslip_tolerance)  // noslip solver tolerance
-      .field("mpr_tolerance"       , &mjOption::mpr_tolerance)     // MPR solver tolerance
+      .field("ccd_tolerance"       , &mjOption::ccd_tolerance)     // convex collision solver tolerance
       //.field("gravity"           , &mjOption::gravity)           // gravitational acceleration
       //.field("wind"              , &mjOption::wind)              // wind (for lift, drag and viscosity)
       //.field("magnetic"          , &mjOption::magnetic)          // global magnetic flux
@@ -809,15 +806,18 @@ EMSCRIPTEN_BINDINGS(mujoco_wasm) {
       //.field("o_solref"          , &mjOption::o_solref)          // solref
       //.field("o_solimp"          , &mjOption::o_solimp)          // solimp
       .field("integrator"          , &mjOption::integrator)        // integration mode (mjtIntegrator)
-      .field("collision"           , &mjOption::collision)         // collision mode (mjtCollision)
       .field("cone"                , &mjOption::cone)              // type of friction cone (mjtCone)
       .field("jacobian"            , &mjOption::jacobian)          // type of Jacobian (mjtJacobian)
       .field("solver"              , &mjOption::solver)            // solver algorithm (mjtSolver)
       .field("iterations"          , &mjOption::iterations)        // maximum number of main solver iterations
+      .field("ls_iterations"       , &mjOption::ls_iterations)     // maximum number of CG/Newton linesearch iterations
       .field("noslip_iterations"   , &mjOption::noslip_iterations) // maximum number of noslip solver iterations
-      .field("mpr_iterations"      , &mjOption::mpr_iterations)    // maximum number of MPR solver iterations
+      .field("ccd_iterations"      , &mjOption::ccd_iterations)    // maximum number of convex collision solver iterations
       .field("disableflags"        , &mjOption::disableflags)      // bit flags for disabling standard features
-      .field("enableflags"         , &mjOption::enableflags);      // bit flags for enabling optional features
+      .field("enableflags"         , &mjOption::enableflags)       // bit flags for enabling optional features
+      .field("disableactuator"     , &mjOption::disableactuator)   // bit flags for disabling actuators by group id
+      .field("sdf_initpoints"      , &mjOption::sdf_initpoints)    // number of starting points for gradient descent
+      .field("sdf_iterations"      , &mjOption::sdf_iterations);   // max number of iterations for gradient descent
 
   register_vector<mjContact>("vector<mjContact>");
 }

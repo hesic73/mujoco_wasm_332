@@ -1550,6 +1550,12 @@ FUNCTIONS: Mapping[str, FunctionDecl] = dict([
                  ),
              ),
              FunctionParameterDecl(
+                 name='sqrtInvD',
+                 type=PointerType(
+                     inner_type=ValueType(name='mjtNum', is_const=True),
+                 ),
+             ),
+             FunctionParameterDecl(
                  name='n',
                  type=ValueType(name='int'),
              ),
@@ -4844,27 +4850,6 @@ FUNCTIONS: Mapping[str, FunctionDecl] = dict([
              ),
          ),
          doc='Write [datetime, type: message] to MUJOCO_LOG.TXT.',
-     )),
-    ('mj_activate',
-     FunctionDecl(
-         name='mj_activate',
-         return_type=ValueType(name='int'),
-         parameters=(
-             FunctionParameterDecl(
-                 name='filename',
-                 type=PointerType(
-                     inner_type=ValueType(name='char', is_const=True),
-                 ),
-             ),
-         ),
-         doc='Return 1 (for backward compatibility).',
-     )),
-    ('mj_deactivate',
-     FunctionDecl(
-         name='mj_deactivate',
-         return_type=ValueType(name='void'),
-         parameters=(),
-         doc='Do nothing (for backward compatibility).',
      )),
     ('mju_zero3',
      FunctionDecl(

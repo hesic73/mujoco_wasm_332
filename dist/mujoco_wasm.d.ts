@@ -930,7 +930,7 @@ export interface Simulation {
   /** Solve linear system M * x = y using factorization:  x = inv(L'*D*L)*y    [Only works with MuJoCo Allocated Arrays!]*/
   solveM                (x : Float64Array, y : Float64Array, n : number): void;
   /** Half of linear solve:  x = sqrt(inv(D))*inv(L')*y    [Only works with MuJoCo Allocated Arrays!]*/
-  solveM2               (x : Float64Array, y : Float64Array, n : number): void;
+  solveM2               (x : Float64Array, y : Float64Array, sqrtInvD : Float64Array, n : number): void;
   /** Compute cvel, cdof_dot.*/
   comVel                (): void;
   /** Compute qfrc_passive from spring-dampers, viscosity and density.*/
@@ -1011,10 +1011,6 @@ export interface Simulation {
   warning               (warning : number, info : number): void;
   /** Write [datetime, type: message] to MUJOCO_LOG.TXT.*/
   _writeLog             (type : string, msg : string): void;
-  /** Return 1 (for backward compatibility).*/
-  activate              (filename : string): number;
-  /** Do nothing (for backward compatibility).*/
-  deactivate            (): void;
   /** Set res = 0.    [Only works with MuJoCo Allocated Arrays!]*/
   _zero                 (res : Float64Array, n : number): void;
   /** Set res = val.    [Only works with MuJoCo Allocated Arrays!]*/
