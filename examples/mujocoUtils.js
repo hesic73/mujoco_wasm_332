@@ -45,7 +45,7 @@ export function setupGUI(parentContext) {
   parentContext.gui.add(parentContext.params, 'scene', {
     "Humanoid": "humanoid.xml", "Cassie": "agility_cassie/scene.xml",
     "Hammock": "hammock.xml", "Balloons": "balloons.xml", "Hand": "shadow_hand/scene_right.xml",
-    "Flag": "flag.xml", "Mug": "mug.xml", "Tendon": "model_with_tendon.xml"
+    "Flag": "flag.xml", "Mug": "mug.xml", "Tendon": "model_with_tendon.xml", "Franka FR3": "franka_fr3/scene.xml"
   }).name('Example Scene').onChange(reload);
 
   // Add a help menu.
@@ -285,12 +285,28 @@ export async function loadSceneFromURL(mujoco, filename, parent) {
     // Load in the state from XML.
     let model, state, simulation;
     try {
+      console.log("Attempting to load:", "/working/" + filename);
+      // Check if file exists
+      try {
+        const fileInfo = mujoco.FS.stat("/working/" + filename);
+        console.log("File exists, size:", fileInfo.size);
+      } catch (fsError) {
+        console.error("File does not exist in virtual filesystem:", "/working/" + filename);
+        throw fsError;
+      }
+      
       model = mujoco.Model.load_from_xml("/working/"+filename);
+      console.log("Model loaded successfully");
       state = new mujoco.State(model);
+      console.log("State created successfully");
       simulation = new mujoco.Simulation(model, state);
+      console.log("Simulation created successfully");
     } catch (e) {
       console.error("Error loading model from XML:", filename);
       console.error("Exception:", e);
+      console.error("Exception type:", e.constructor.name);
+      console.error("Exception message:", e.message);
+      console.error("Exception stack:", e.stack);
       console.error("Make sure the XML file exists and is valid for MuJoCo 3.3.2");
       throw e; // Re-throw to let the caller handle it
     }
@@ -472,9 +488,9 @@ export async function loadSceneFromURL(mujoco, filename, parent) {
           color: new THREE.Color(color[0], color[1], color[2]),
           transparent: color[3] < 1.0,
           opacity: color[3],
-          specularIntensity: model.geom_matid[g] != -1 ?       model.mat_specular   [model.geom_matid[g]] *0.5 : undefined,
-          reflectivity     : model.geom_matid[g] != -1 ?       model.mat_reflectance[model.geom_matid[g]] : undefined,
-          roughness        : model.geom_matid[g] != -1 ? 1.0 - model.mat_shininess  [model.geom_matid[g]] : undefined,
+          specularIntensity: model.geom_matid[g] != -1 ? model.mat_specular[model.geom_matid[g]] * 0.5 : undefined,
+          reflectivity     : model.geom_matid[g] != -1 ? model.mat_reflectance[model.geom_matid[g]] : undefined,
+          roughness        : model.geom_matid[g] != -1 ? 1.0 - model.mat_shininess[model.geom_matid[g]] : undefined,
           metalness        : model.geom_matid[g] != -1 ? 0.1 : undefined
         };
         // Only set map if texture exists
@@ -486,7 +502,11 @@ export async function loadSceneFromURL(mujoco, filename, parent) {
 
       let mesh = new THREE.Mesh();
       if (type == 0) {
-        mesh = new Reflector( new THREE.PlaneGeometry( 100, 100 ), { clipBias: 0.003,texture: texture } );
+        let reflectorOptions = { clipBias: 0.003 };
+        if (texture) {
+          reflectorOptions.texture = texture;
+        }
+        mesh = new Reflector( new THREE.PlaneGeometry( 100, 100 ), reflectorOptions );
         mesh.rotateX( - Math.PI / 2 );
       } else {
         mesh = new THREE.Mesh(geometry, material);
@@ -521,19 +541,21 @@ export async function loadSceneFromURL(mujoco, filename, parent) {
     for (let l = 0; l < model.nlight; l++) {
       let light = new THREE.SpotLight();
       if (model.light_directional[l]) {
-        light = new THREE.DirectionalLight();
+        light = new THREE.DirectionalLight(0xffffff, 1.0);
+        light.position.set(2, 4, 3);
       } else {
-        light = new THREE.SpotLight();
+        light = new THREE.SpotLight(0xffffff, 1.0);
       }
       light.decay = model.light_attenuation[l] * 100;
       light.penumbra = 0.5;
-      light.castShadow = true; // default false
+      light.castShadow = true;
 
-      light.shadow.mapSize.width = 1024; // default
-      light.shadow.mapSize.height = 1024; // default
-      light.shadow.camera.near = 1; // default
-      light.shadow.camera.far = 10; // default
-      //bodies[model.light_bodyid()].add(light);
+      light.shadow.mapSize.width = 2048;  // Increase shadow quality
+      light.shadow.mapSize.height = 2048;
+      light.shadow.camera.near = 0.1;
+      light.shadow.camera.far = 20;
+      light.shadow.bias = -0.0001;  // Reduce shadow acne
+      
       if (bodies[0]) {
         bodies[0].add(light);
       } else {
@@ -542,19 +564,31 @@ export async function loadSceneFromURL(mujoco, filename, parent) {
       lights.push(light);
     }
     if (model.nlight == 0) {
-      let light = new THREE.DirectionalLight();
+      // Add better default lighting if no lights in scene
+      let light = new THREE.DirectionalLight(0xffffff, 1.0);
+      light.position.set(2, 4, 3);
+      light.castShadow = true;
+      light.shadow.mapSize.width = 2048;
+      light.shadow.mapSize.height = 2048;
+      light.shadow.camera.near = 0.1;
+      light.shadow.camera.far = 20;
+      light.shadow.bias = -0.0001;
       mujocoRoot.add(light);
     }
 
     for (let b = 0; b < model.nbody; b++) {
-      //let parent_body = model.body_parentid()[b];
+      // Create body if it doesn't exist
+      if (!bodies[b]) {
+        bodies[b] = new THREE.Group();
+        bodies[b].name = names[model.name_bodyadr[b]] || `body_${b}`;
+        bodies[b].bodyID = b;
+        bodies[b].has_custom_mesh = false;
+      }
+      
+      // Add to scene hierarchy
       if (b == 0 || !bodies[0]) {
         mujocoRoot.add(bodies[b]);
-      } else if(bodies[b]){
-        bodies[0].add(bodies[b]);
       } else {
-        console.log("Body without Geometry detected; adding to bodies", b, bodies[b]);
-        bodies[b] = new THREE.Group(); bodies[b].name = names[b + 1]; bodies[b].bodyID = b; bodies[b].has_custom_mesh = false;
         bodies[0].add(bodies[b]);
       }
     }
@@ -617,6 +651,50 @@ export async function downloadExampleScenesFolder(mujoco) {
     "simple.xml",
     "slider_crank.xml",
     "model_with_tendon.xml",
+    "franka_fr3/scene.xml",
+    "franka_fr3/fr3.xml",
+    "franka_fr3/assets/link0.obj",
+    "franka_fr3/assets/link0.stl",
+    "franka_fr3/assets/link0_0.obj",
+    "franka_fr3/assets/link0_1.obj",
+    "franka_fr3/assets/link0_2.obj",
+    "franka_fr3/assets/link0_3.obj",
+    "franka_fr3/assets/link0_4.obj",
+    "franka_fr3/assets/link0_5.obj",
+    "franka_fr3/assets/link0_6.obj",
+    "franka_fr3/assets/link1.obj",
+    "franka_fr3/assets/link1.stl",
+    "franka_fr3/assets/link2.obj",
+    "franka_fr3/assets/link2.stl",
+    "franka_fr3/assets/link3.obj",
+    "franka_fr3/assets/link3.stl",
+    "franka_fr3/assets/link3_0.obj",
+    "franka_fr3/assets/link3_1.obj",
+    "franka_fr3/assets/link4.obj",
+    "franka_fr3/assets/link4.stl",
+    "franka_fr3/assets/link4_0.obj",
+    "franka_fr3/assets/link4_1.obj",
+    "franka_fr3/assets/link5.obj",
+    "franka_fr3/assets/link5.stl",
+    "franka_fr3/assets/link5_0.obj",
+    "franka_fr3/assets/link5_1.obj",
+    "franka_fr3/assets/link5_2.obj",
+    "franka_fr3/assets/link6.obj",
+    "franka_fr3/assets/link6.stl",
+    "franka_fr3/assets/link6_0.obj",
+    "franka_fr3/assets/link6_1.obj",
+    "franka_fr3/assets/link6_2.obj",
+    "franka_fr3/assets/link6_3.obj",
+    "franka_fr3/assets/link6_4.obj",
+    "franka_fr3/assets/link6_5.obj",
+    "franka_fr3/assets/link6_6.obj",
+    "franka_fr3/assets/link6_7.obj",
+    "franka_fr3/assets/link7.obj",
+    "franka_fr3/assets/link7.stl",
+    "franka_fr3/assets/link7_0.obj",
+    "franka_fr3/assets/link7_1.obj",
+    "franka_fr3/assets/link7_2.obj",
+    "franka_fr3/assets/link7_3.obj",
   ];
 
   let requests = allFiles.map((url) => fetch("./examples/scenes/" + url));

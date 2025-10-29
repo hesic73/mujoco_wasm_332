@@ -49,11 +49,14 @@ export class MuJoCoDemo {
     this.ambientLight.name = 'AmbientLight';
     this.scene.add( this.ambientLight );
 
-    this.renderer = new THREE.WebGLRenderer( { antialias: true } );
+    this.renderer = new THREE.WebGLRenderer( { antialias: true, alpha: false } );
     this.renderer.setPixelRatio( window.devicePixelRatio );
     this.renderer.setSize( window.innerWidth, window.innerHeight );
     this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.renderer.outputColorSpace = THREE.SRGBColorSpace;  // Better color accuracy
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;  // More realistic tone mapping
+    this.renderer.toneMappingExposure = 1.0;
     this.renderer.setAnimationLoop( this.render.bind(this) );
 
     this.container.appendChild( this.renderer.domElement );
