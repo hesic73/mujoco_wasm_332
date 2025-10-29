@@ -45,7 +45,8 @@ export function setupGUI(parentContext) {
   parentContext.gui.add(parentContext.params, 'scene', {
     "Humanoid": "humanoid.xml", "Cassie": "agility_cassie/scene.xml",
     "Hammock": "hammock.xml", "Balloons": "balloons.xml", "Hand": "shadow_hand/scene_right.xml",
-    "Flag": "flag.xml", "Mug": "mug.xml", "Tendon": "model_with_tendon.xml", "Franka FR3": "franka_fr3/scene.xml"
+    "Flag": "flag.xml", "Mug": "mug.xml", "Tendon": "model_with_tendon.xml", 
+    "Franka FR3": "franka_fr3/scene.xml", "Go2 (from facet)": "unitree_go2/scene.xml"
   }).name('Example Scene').onChange(reload);
 
   // Add a help menu.
@@ -695,6 +696,31 @@ export async function downloadExampleScenesFolder(mujoco) {
     "franka_fr3/assets/link7_1.obj",
     "franka_fr3/assets/link7_2.obj",
     "franka_fr3/assets/link7_3.obj",
+    "unitree_go2/scene.xml",
+    "unitree_go2/go2.xml",
+    "unitree_go2/assets/base_0.obj",
+    "unitree_go2/assets/base_1.obj",
+    "unitree_go2/assets/base_2.obj",
+    "unitree_go2/assets/base_3.obj",
+    "unitree_go2/assets/base_4.obj",
+    "unitree_go2/assets/calf_0.obj",
+    "unitree_go2/assets/calf_1.obj",
+    "unitree_go2/assets/calf_mirror_0.obj",
+    "unitree_go2/assets/calf_mirror_1.obj",
+    "unitree_go2/assets/foot.obj",
+    "unitree_go2/assets/hip_0.obj",
+    "unitree_go2/assets/hip_1.obj",
+    "unitree_go2/assets/thigh_0.obj",
+    "unitree_go2/assets/thigh_1.obj",
+    "unitree_go2/assets/thigh_mirror_0.obj",
+    "unitree_go2/assets/thigh_mirror_1.obj",
+    "unitree_go2/meshes/base.stl",
+    "unitree_go2/meshes/calf_mirror.stl",
+    "unitree_go2/meshes/calf.stl",
+    "unitree_go2/meshes/foot.stl",
+    "unitree_go2/meshes/hip.stl",
+    "unitree_go2/meshes/thigh_mirror.stl",
+    "unitree_go2/meshes/thigh.stl",
   ];
 
   let requests = allFiles.map((url) => fetch("./examples/scenes/" + url));
