@@ -13,16 +13,15 @@ const mujoco = await load_mujoco();
 var initialScene = "humanoid.xml";
 mujoco.FS.mkdir('/working');
 mujoco.FS.mount(mujoco.MEMFS, { root: '.' }, '/working');
-mujoco.FS.writeFile("/working/" + initialScene, await(await fetch("./examples/scenes/" + initialScene)).text());
 
 export class MuJoCoDemo {
   constructor() {
     this.mujoco = mujoco;
 
-    // Load in the state from XML
-    this.model      = new mujoco.Model("/working/" + initialScene);
-    this.state      = new mujoco.State(this.model);
-    this.simulation = new mujoco.Simulation(this.model, this.state);
+    // Model will be loaded in init() after downloading all scene files
+    this.model      = null;
+    this.state      = null;
+    this.simulation = null;
 
     // Define Random State Variables
     this.params = { scene: initialScene, paused: false, help: false, ctrlnoiserate: 0.0, ctrlnoisestd: 0.0, keyframeNumber: 0 };
@@ -94,6 +93,12 @@ export class MuJoCoDemo {
 
   render(timeMS) {
     this.controls.update();
+
+    // Check if model and simulation are loaded and valid
+    if (!this.model || !this.simulation) {
+      this.renderer.render(this.scene, this.camera);
+      return;
+    }
 
     if (!this.params["paused"]) {
       let timestep = this.model.getOptions().timestep;

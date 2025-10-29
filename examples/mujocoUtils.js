@@ -3,13 +3,29 @@ import { Reflector  } from './utils/Reflector.js';
 import { MuJoCoDemo } from './main.js';
 
 export async function reloadFunc() {
-  // Delete the old scene and load the new scene
-  this.scene.remove(this.scene.getObjectByName("MuJoCo Root"));
-  [this.model, this.state, this.simulation, this.bodies, this.lights] =
-    await loadSceneFromURL(this.mujoco, this.params.scene, this);
-  this.simulation.forward();
-  for (let i = 0; i < this.updateGUICallbacks.length; i++) {
-    this.updateGUICallbacks[i](this.model, this.simulation, this.params);
+  try {
+    // Try to load the new scene FIRST, before touching the old one
+    let [newModel, newState, newSimulation, newBodies, newLights] =
+      await loadSceneFromURL(this.mujoco, this.params.scene, this);
+    
+    // Loading succeeded! Now we can safely delete the old scene
+    this.scene.remove(this.scene.getObjectByName("MuJoCo Root"));
+    
+    // Update to the new scene
+    this.model = newModel;
+    this.state = newState;
+    this.simulation = newSimulation;
+    this.bodies = newBodies;
+    this.lights = newLights;
+    
+    this.simulation.forward();
+    for (let i = 0; i < this.updateGUICallbacks.length; i++) {
+      this.updateGUICallbacks[i](this.model, this.simulation, this.params);
+    }
+  } catch (e) {
+    console.error("Failed to load scene:", this.params.scene);
+    console.error(e);
+    console.log("Keeping previous scene due to load failure");
   }
 }
 
@@ -266,22 +282,18 @@ export function setupGUI(parentContext) {
  * @param {MuJoCoDemo} parent The three.js Scene Object to add the MuJoCo model elements to
  */
 export async function loadSceneFromURL(mujoco, filename, parent) {
-    // Free the old simulation.
-    if (parent.simulation != null) {
-      parent.simulation.free();
-      parent.model      = null;
-      parent.state      = null;
-      parent.simulation = null;
-    }
-
     // Load in the state from XML.
-    parent.model       = mujoco.Model.load_from_xml("/working/"+filename);
-    parent.state       = new mujoco.State(parent.model);
-    parent.simulation  = new mujoco.Simulation(parent.model, parent.state);
-
-    let model = parent.model;
-    let state = parent.state;
-    let simulation = parent.simulation;
+    let model, state, simulation;
+    try {
+      model = mujoco.Model.load_from_xml("/working/"+filename);
+      state = new mujoco.State(model);
+      simulation = new mujoco.Simulation(model, state);
+    } catch (e) {
+      console.error("Error loading model from XML:", filename);
+      console.error("Exception:", e);
+      console.error("Make sure the XML file exists and is valid for MuJoCo 3.3.2");
+      throw e; // Re-throw to let the caller handle it
+    }
 
     // Decode the null-terminated string names.
     let textDecoder = new TextDecoder("utf-8");
@@ -406,16 +418,35 @@ export async function loadSceneFromURL(mujoco, filename, parent) {
         texture = undefined;
         let texId = model.mat_texid[matId];
         if (texId != -1) {
-          let width    = model.tex_width [texId];
-          let height   = model.tex_height[texId];
-          let offset   = model.tex_adr   [texId];
-          let rgbArray = model.tex_rgb   ;
+          let width     = model.tex_width   [texId];
+          let height    = model.tex_height  [texId];
+          let nchannel  = model.tex_nchannel[texId];
+          let offset    = model.tex_adr     [texId];
+          let texData   = model.tex_data;
+          
+          // Convert texture data to RGBA format
           let rgbaArray = new Uint8Array(width * height * 4);
           for (let p = 0; p < width * height; p++){
-            rgbaArray[(p * 4) + 0] = rgbArray[offset + ((p * 3) + 0)];
-            rgbaArray[(p * 4) + 1] = rgbArray[offset + ((p * 3) + 1)];
-            rgbaArray[(p * 4) + 2] = rgbArray[offset + ((p * 3) + 2)];
-            rgbaArray[(p * 4) + 3] = 1.0;
+            if (nchannel == 3) {
+              // RGB texture
+              rgbaArray[(p * 4) + 0] = texData[offset + ((p * 3) + 0)];
+              rgbaArray[(p * 4) + 1] = texData[offset + ((p * 3) + 1)];
+              rgbaArray[(p * 4) + 2] = texData[offset + ((p * 3) + 2)];
+              rgbaArray[(p * 4) + 3] = 255;
+            } else if (nchannel == 4) {
+              // RGBA texture
+              rgbaArray[(p * 4) + 0] = texData[offset + ((p * 4) + 0)];
+              rgbaArray[(p * 4) + 1] = texData[offset + ((p * 4) + 1)];
+              rgbaArray[(p * 4) + 2] = texData[offset + ((p * 4) + 2)];
+              rgbaArray[(p * 4) + 3] = texData[offset + ((p * 4) + 3)];
+            } else if (nchannel == 1) {
+              // Grayscale texture
+              let gray = texData[offset + p];
+              rgbaArray[(p * 4) + 0] = gray;
+              rgbaArray[(p * 4) + 1] = gray;
+              rgbaArray[(p * 4) + 2] = gray;
+              rgbaArray[(p * 4) + 3] = 255;
+            }
           }
           texture = new THREE.DataTexture(rgbaArray, width, height, THREE.RGBAFormat, THREE.UnsignedByteType);
           if (texId == 2) {
@@ -437,16 +468,20 @@ export async function loadSceneFromURL(mujoco, filename, parent) {
           material.color.b != color[2] ||
           material.opacity != color[3] ||
           material.map     != texture) {
-        material = new THREE.MeshPhysicalMaterial({
+        let materialProps = {
           color: new THREE.Color(color[0], color[1], color[2]),
           transparent: color[3] < 1.0,
           opacity: color[3],
           specularIntensity: model.geom_matid[g] != -1 ?       model.mat_specular   [model.geom_matid[g]] *0.5 : undefined,
           reflectivity     : model.geom_matid[g] != -1 ?       model.mat_reflectance[model.geom_matid[g]] : undefined,
           roughness        : model.geom_matid[g] != -1 ? 1.0 - model.mat_shininess  [model.geom_matid[g]] : undefined,
-          metalness        : model.geom_matid[g] != -1 ? 0.1 : undefined,
-          map              : texture
-        });
+          metalness        : model.geom_matid[g] != -1 ? 0.1 : undefined
+        };
+        // Only set map if texture exists
+        if (texture) {
+          materialProps.map = texture;
+        }
+        material = new THREE.MeshPhysicalMaterial(materialProps);
       }
 
       let mesh = new THREE.Mesh();

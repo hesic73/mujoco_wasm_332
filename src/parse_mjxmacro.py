@@ -13,11 +13,13 @@ parse_mode = (None, None)
 types_to_array_types = {"int":"Int32Array", "mjtNum":"Float64Array", "float": "Float32Array", "mjtByte": "Uint8Array", "char": "Uint8Array", "uintptr_t":"BigUint64Array"}
 
 def parse_pointer_line(line:str, header_lines:list[str], mj_definitions:list[str], emscripten_bindings:list[str], typescript_definitions:list[str]):
-    # Remove the macro prefix (X or XMJV) and extract the content
+    # Remove the macro prefix (X, XMJV, XNV) and extract the content
     stripped = line.strip()
-    # Check for XMJV first (longer prefix)
+    # Check for longer prefixes first
     if stripped.startswith("XMJV("):
         line = stripped[5:]  # Remove "XMJV("
+    elif stripped.startswith("XNV ("):
+        line = stripped[5:]  # Remove "XNV ("
     elif stripped.startswith("X   ("):
         line = stripped[5:]  # Remove "X   ("
     else:
@@ -43,7 +45,19 @@ def parse_pointer_line(line:str, header_lines:list[str], mj_definitions:list[str
     typescript_definitions.append('  '+elements[1].ljust(22)+': '+types_to_array_types[elements[0]].rjust(12)+';')
 
 def parse_int_line(line:str, header_lines:list[str], mj_definitions:list[str], emscripten_bindings:list[str], typescript_definitions:list[str]):
-    name = line.strip("    X(").split(""")""")[0].strip()
+    # Remove the macro prefix (X, XMJV) and extract the field name
+    stripped = line.strip()
+    # Check for XMJV first (longer prefix)
+    if stripped.startswith("XMJV("):
+        name = stripped[5:]  # Remove "XMJV("
+    elif stripped.startswith("X   ("):
+        name = stripped[5:]  # Remove "X   ("
+    else:
+        return
+    
+    # Extract the field name
+    name = name.split(")")[0].strip()
+    
     mj_definitions     .append('  int  '+name.ljust(14)+'() const { return m->'+name.ljust(14)+'; }')
     emscripten_bindings.append('      .property('+('"'+name+'"').ljust(24)+', &Model::'+name.ljust(22)+')')
 
@@ -72,7 +86,7 @@ with open("include/mujoco/mjxmacro.h") as f:
         if parse_mode[0] != None:
             if parse_mode[0] == "pointers":
                 stripped = line.strip()
-                if (stripped.startswith("X   (") or stripped.startswith("XMJV(")):
+                if (stripped.startswith("X   (") or stripped.startswith("XMJV(") or stripped.startswith("XNV (")):
                     parse_pointer_line(line, 
                                        model_lines if parse_mode[1] == "model" else data_lines, 
                                        auto_gen_lines[parse_mode[1]+"_definitions"], 
@@ -83,7 +97,7 @@ with open("include/mujoco/mjxmacro.h") as f:
 
             if parse_mode[0] == "ints":
                 stripped = line.strip()
-                if stripped.startswith("X(") or stripped.startswith("X ("):
+                if stripped.startswith("X   (") or stripped.startswith("XMJV("):
                     parse_int_line(line, 
                                    model_lines if parse_mode[1] == "model" else data_lines, 
                                    auto_gen_lines[parse_mode[1]+"_definitions"], 
