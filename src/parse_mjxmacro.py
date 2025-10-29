@@ -13,7 +13,17 @@ parse_mode = (None, None)
 types_to_array_types = {"int":"Int32Array", "mjtNum":"Float64Array", "float": "Float32Array", "mjtByte": "Uint8Array", "char": "Uint8Array", "uintptr_t":"BigUint64Array"}
 
 def parse_pointer_line(line:str, header_lines:list[str], mj_definitions:list[str], emscripten_bindings:list[str], typescript_definitions:list[str]):
-    elements = line.strip("    X(").split(""")""")[0].strip().split(",")
+    # Remove the macro prefix (X or XMJV) and extract the content
+    stripped = line.strip()
+    # Check for XMJV first (longer prefix)
+    if stripped.startswith("XMJV("):
+        line = stripped[5:]  # Remove "XMJV("
+    elif stripped.startswith("X   ("):
+        line = stripped[5:]  # Remove "X   ("
+    else:
+        return
+    
+    elements = line.split(")")[0].strip().split(",")
     elements = [e.strip() for e in elements]
 
     model_ptr = "m" if parse_mode[1] == "model" else "_model->ptr()"
@@ -61,7 +71,8 @@ with open("include/mujoco/mjxmacro.h") as f:
     for line in lines:
         if parse_mode[0] != None:
             if parse_mode[0] == "pointers":
-                if line.strip().startswith("X("):
+                stripped = line.strip()
+                if (stripped.startswith("X   (") or stripped.startswith("XMJV(")):
                     parse_pointer_line(line, 
                                        model_lines if parse_mode[1] == "model" else data_lines, 
                                        auto_gen_lines[parse_mode[1]+"_definitions"], 
@@ -71,7 +82,8 @@ with open("include/mujoco/mjxmacro.h") as f:
                     parse_mode = (None, None)
 
             if parse_mode[0] == "ints":
-                if line.strip().startswith("X("):
+                stripped = line.strip()
+                if stripped.startswith("X(") or stripped.startswith("X ("):
                     parse_int_line(line, 
                                    model_lines if parse_mode[1] == "model" else data_lines, 
                                    auto_gen_lines[parse_mode[1]+"_definitions"], 

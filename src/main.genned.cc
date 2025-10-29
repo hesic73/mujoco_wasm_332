@@ -44,7 +44,214 @@ public:
   void free          () { return mju_free(m); }
 
   // MJMODEL_DEFINITIONS
-
+  val  qpos0                  () const { return val(typed_memory_view(m->nq              * 1        , m->qpos0                  )); }
+  val  qpos_spring            () const { return val(typed_memory_view(m->nq              * 1        , m->qpos_spring            )); }
+  val  body_parentid          () const { return val(typed_memory_view(m->nbody           * 1        , m->body_parentid          )); }
+  val  body_rootid            () const { return val(typed_memory_view(m->nbody           * 1        , m->body_rootid            )); }
+  val  body_weldid            () const { return val(typed_memory_view(m->nbody           * 1        , m->body_weldid            )); }
+  val  body_mocapid           () const { return val(typed_memory_view(m->nbody           * 1        , m->body_mocapid           )); }
+  val  body_jntnum            () const { return val(typed_memory_view(m->nbody           * 1        , m->body_jntnum            )); }
+  val  body_jntadr            () const { return val(typed_memory_view(m->nbody           * 1        , m->body_jntadr            )); }
+  val  body_dofnum            () const { return val(typed_memory_view(m->nbody           * 1        , m->body_dofnum            )); }
+  val  body_dofadr            () const { return val(typed_memory_view(m->nbody           * 1        , m->body_dofadr            )); }
+  val  body_treeid            () const { return val(typed_memory_view(m->nbody           * 1        , m->body_treeid            )); }
+  val  body_geomnum           () const { return val(typed_memory_view(m->nbody           * 1        , m->body_geomnum           )); }
+  val  body_geomadr           () const { return val(typed_memory_view(m->nbody           * 1        , m->body_geomadr           )); }
+  val  body_simple            () const { return val(typed_memory_view(m->nbody           * 1        , m->body_simple            )); }
+  val  body_sameframe         () const { return val(typed_memory_view(m->nbody           * 1        , m->body_sameframe         )); }
+  val  body_pos               () const { return val(typed_memory_view(m->nbody           * 3        , m->body_pos               )); }
+  val  body_quat              () const { return val(typed_memory_view(m->nbody           * 4        , m->body_quat              )); }
+  val  body_ipos              () const { return val(typed_memory_view(m->nbody           * 3        , m->body_ipos              )); }
+  val  body_iquat             () const { return val(typed_memory_view(m->nbody           * 4        , m->body_iquat             )); }
+  val  body_mass              () const { return val(typed_memory_view(m->nbody           * 1        , m->body_mass              )); }
+  val  body_subtreemass       () const { return val(typed_memory_view(m->nbody           * 1        , m->body_subtreemass       )); }
+  val  body_inertia           () const { return val(typed_memory_view(m->nbody           * 3        , m->body_inertia           )); }
+  val  body_invweight0        () const { return val(typed_memory_view(m->nbody           * 2        , m->body_invweight0        )); }
+  val  body_gravcomp          () const { return val(typed_memory_view(m->nbody           * 1        , m->body_gravcomp          )); }
+  val  body_margin            () const { return val(typed_memory_view(m->nbody           * 1        , m->body_margin            )); }
+  val  body_user              () const { return val(typed_memory_view(m->nbody           * m->nuser_body, m->body_user              )); }
+  val  body_plugin            () const { return val(typed_memory_view(m->nbody           * 1        , m->body_plugin            )); }
+  val  body_contype           () const { return val(typed_memory_view(m->nbody           * 1        , m->body_contype           )); }
+  val  body_conaffinity       () const { return val(typed_memory_view(m->nbody           * 1        , m->body_conaffinity       )); }
+  val  body_bvhadr            () const { return val(typed_memory_view(m->nbody           * 1        , m->body_bvhadr            )); }
+  val  body_bvhnum            () const { return val(typed_memory_view(m->nbody           * 1        , m->body_bvhnum            )); }
+  val  bvh_depth              () const { return val(typed_memory_view(m->nbvh            * 1        , m->bvh_depth              )); }
+  val  bvh_child              () const { return val(typed_memory_view(m->nbvh            * 2        , m->bvh_child              )); }
+  val  bvh_nodeid             () const { return val(typed_memory_view(m->nbvh            * 1        , m->bvh_nodeid             )); }
+  val  bvh_aabb               () const { return val(typed_memory_view(m->nbvhstatic      * 6        , m->bvh_aabb               )); }
+  val  jnt_type               () const { return val(typed_memory_view(m->njnt            * 1        , m->jnt_type               )); }
+  val  jnt_qposadr            () const { return val(typed_memory_view(m->njnt            * 1        , m->jnt_qposadr            )); }
+  val  jnt_dofadr             () const { return val(typed_memory_view(m->njnt            * 1        , m->jnt_dofadr             )); }
+  val  jnt_bodyid             () const { return val(typed_memory_view(m->njnt            * 1        , m->jnt_bodyid             )); }
+  val  jnt_group              () const { return val(typed_memory_view(m->njnt            * 1        , m->jnt_group              )); }
+  val  jnt_limited            () const { return val(typed_memory_view(m->njnt            * 1        , m->jnt_limited            )); }
+  val  jnt_actfrclimited      () const { return val(typed_memory_view(m->njnt            * 1        , m->jnt_actfrclimited      )); }
+  val  jnt_actgravcomp        () const { return val(typed_memory_view(m->njnt            * 1        , m->jnt_actgravcomp        )); }
+  val  jnt_solref             () const { return val(typed_memory_view(m->njnt            * mjNREF   , m->jnt_solref             )); }
+  val  jnt_solimp             () const { return val(typed_memory_view(m->njnt            * mjNIMP   , m->jnt_solimp             )); }
+  val  jnt_pos                () const { return val(typed_memory_view(m->njnt            * 3        , m->jnt_pos                )); }
+  val  jnt_axis               () const { return val(typed_memory_view(m->njnt            * 3        , m->jnt_axis               )); }
+  val  jnt_stiffness          () const { return val(typed_memory_view(m->njnt            * 1        , m->jnt_stiffness          )); }
+  val  jnt_range              () const { return val(typed_memory_view(m->njnt            * 2        , m->jnt_range              )); }
+  val  jnt_actfrcrange        () const { return val(typed_memory_view(m->njnt            * 2        , m->jnt_actfrcrange        )); }
+  val  jnt_margin             () const { return val(typed_memory_view(m->njnt            * 1        , m->jnt_margin             )); }
+  val  jnt_user               () const { return val(typed_memory_view(m->njnt            * m->nuser_jnt, m->jnt_user               )); }
+  val  dof_bodyid             () const { return val(typed_memory_view(m->nv              * 1        , m->dof_bodyid             )); }
+  val  dof_jntid              () const { return val(typed_memory_view(m->nv              * 1        , m->dof_jntid              )); }
+  val  dof_parentid           () const { return val(typed_memory_view(m->nv              * 1        , m->dof_parentid           )); }
+  val  dof_treeid             () const { return val(typed_memory_view(m->nv              * 1        , m->dof_treeid             )); }
+  val  dof_Madr               () const { return val(typed_memory_view(m->nv              * 1        , m->dof_Madr               )); }
+  val  dof_simplenum          () const { return val(typed_memory_view(m->nv              * 1        , m->dof_simplenum          )); }
+  val  dof_solref             () const { return val(typed_memory_view(m->nv              * mjNREF   , m->dof_solref             )); }
+  val  dof_solimp             () const { return val(typed_memory_view(m->nv              * mjNIMP   , m->dof_solimp             )); }
+  val  dof_frictionloss       () const { return val(typed_memory_view(m->nv              * 1        , m->dof_frictionloss       )); }
+  val  dof_armature           () const { return val(typed_memory_view(m->nv              * 1        , m->dof_armature           )); }
+  val  dof_damping            () const { return val(typed_memory_view(m->nv              * 1        , m->dof_damping            )); }
+  val  dof_invweight0         () const { return val(typed_memory_view(m->nv              * 1        , m->dof_invweight0         )); }
+  val  dof_M0                 () const { return val(typed_memory_view(m->nv              * 1        , m->dof_M0                 )); }
+  val  geom_type              () const { return val(typed_memory_view(m->ngeom           * 1        , m->geom_type              )); }
+  val  geom_contype           () const { return val(typed_memory_view(m->ngeom           * 1        , m->geom_contype           )); }
+  val  geom_conaffinity       () const { return val(typed_memory_view(m->ngeom           * 1        , m->geom_conaffinity       )); }
+  val  geom_condim            () const { return val(typed_memory_view(m->ngeom           * 1        , m->geom_condim            )); }
+  val  geom_bodyid            () const { return val(typed_memory_view(m->ngeom           * 1        , m->geom_bodyid            )); }
+  val  geom_dataid            () const { return val(typed_memory_view(m->ngeom           * 1        , m->geom_dataid            )); }
+  val  geom_matid             () const { return val(typed_memory_view(m->ngeom           * 1        , m->geom_matid             )); }
+  val  geom_group             () const { return val(typed_memory_view(m->ngeom           * 1        , m->geom_group             )); }
+  val  geom_priority          () const { return val(typed_memory_view(m->ngeom           * 1        , m->geom_priority          )); }
+  val  geom_plugin            () const { return val(typed_memory_view(m->ngeom           * 1        , m->geom_plugin            )); }
+  val  geom_sameframe         () const { return val(typed_memory_view(m->ngeom           * 1        , m->geom_sameframe         )); }
+  val  geom_solmix            () const { return val(typed_memory_view(m->ngeom           * 1        , m->geom_solmix            )); }
+  val  geom_solref            () const { return val(typed_memory_view(m->ngeom           * mjNREF   , m->geom_solref            )); }
+  val  geom_solimp            () const { return val(typed_memory_view(m->ngeom           * mjNIMP   , m->geom_solimp            )); }
+  val  geom_size              () const { return val(typed_memory_view(m->ngeom           * 3        , m->geom_size              )); }
+  val  geom_aabb              () const { return val(typed_memory_view(m->ngeom           * 6        , m->geom_aabb              )); }
+  val  geom_rbound            () const { return val(typed_memory_view(m->ngeom           * 1        , m->geom_rbound            )); }
+  val  geom_pos               () const { return val(typed_memory_view(m->ngeom           * 3        , m->geom_pos               )); }
+  val  geom_quat              () const { return val(typed_memory_view(m->ngeom           * 4        , m->geom_quat              )); }
+  val  geom_friction          () const { return val(typed_memory_view(m->ngeom           * 3        , m->geom_friction          )); }
+  val  geom_margin            () const { return val(typed_memory_view(m->ngeom           * 1        , m->geom_margin            )); }
+  val  geom_gap               () const { return val(typed_memory_view(m->ngeom           * 1        , m->geom_gap               )); }
+  val  geom_fluid             () const { return val(typed_memory_view(m->ngeom           * mjNFLUID , m->geom_fluid             )); }
+  val  geom_user              () const { return val(typed_memory_view(m->ngeom           * m->nuser_geom, m->geom_user              )); }
+  val  geom_rgba              () const { return val(typed_memory_view(m->ngeom           * 4        , m->geom_rgba              )); }
+  val  site_type              () const { return val(typed_memory_view(m->nsite           * 1        , m->site_type              )); }
+  val  site_bodyid            () const { return val(typed_memory_view(m->nsite           * 1        , m->site_bodyid            )); }
+  val  site_matid             () const { return val(typed_memory_view(m->nsite           * 1        , m->site_matid             )); }
+  val  site_group             () const { return val(typed_memory_view(m->nsite           * 1        , m->site_group             )); }
+  val  site_sameframe         () const { return val(typed_memory_view(m->nsite           * 1        , m->site_sameframe         )); }
+  val  site_size              () const { return val(typed_memory_view(m->nsite           * 3        , m->site_size              )); }
+  val  site_pos               () const { return val(typed_memory_view(m->nsite           * 3        , m->site_pos               )); }
+  val  site_quat              () const { return val(typed_memory_view(m->nsite           * 4        , m->site_quat              )); }
+  val  site_user              () const { return val(typed_memory_view(m->nsite           * m->nuser_site, m->site_user              )); }
+  val  site_rgba              () const { return val(typed_memory_view(m->nsite           * 4        , m->site_rgba              )); }
+  val  cam_mode               () const { return val(typed_memory_view(m->ncam            * 1        , m->cam_mode               )); }
+  val  cam_bodyid             () const { return val(typed_memory_view(m->ncam            * 1        , m->cam_bodyid             )); }
+  val  cam_targetbodyid       () const { return val(typed_memory_view(m->ncam            * 1        , m->cam_targetbodyid       )); }
+  val  cam_pos                () const { return val(typed_memory_view(m->ncam            * 3        , m->cam_pos                )); }
+  val  cam_quat               () const { return val(typed_memory_view(m->ncam            * 4        , m->cam_quat               )); }
+  val  cam_poscom0            () const { return val(typed_memory_view(m->ncam            * 3        , m->cam_poscom0            )); }
+  val  cam_pos0               () const { return val(typed_memory_view(m->ncam            * 3        , m->cam_pos0               )); }
+  val  cam_mat0               () const { return val(typed_memory_view(m->ncam            * 9        , m->cam_mat0               )); }
+  val  cam_orthographic       () const { return val(typed_memory_view(m->ncam            * 1        , m->cam_orthographic       )); }
+  val  cam_fovy               () const { return val(typed_memory_view(m->ncam            * 1        , m->cam_fovy               )); }
+  val  cam_ipd                () const { return val(typed_memory_view(m->ncam            * 1        , m->cam_ipd                )); }
+  val  cam_resolution         () const { return val(typed_memory_view(m->ncam            * 2        , m->cam_resolution         )); }
+  val  cam_sensorsize         () const { return val(typed_memory_view(m->ncam            * 2        , m->cam_sensorsize         )); }
+  val  cam_intrinsic          () const { return val(typed_memory_view(m->ncam            * 4        , m->cam_intrinsic          )); }
+  val  cam_user               () const { return val(typed_memory_view(m->ncam            * m->nuser_cam, m->cam_user               )); }
+  val  light_mode             () const { return val(typed_memory_view(m->nlight          * 1        , m->light_mode             )); }
+  val  light_bodyid           () const { return val(typed_memory_view(m->nlight          * 1        , m->light_bodyid           )); }
+  val  light_targetbodyid     () const { return val(typed_memory_view(m->nlight          * 1        , m->light_targetbodyid     )); }
+  val  light_directional      () const { return val(typed_memory_view(m->nlight          * 1        , m->light_directional      )); }
+  val  light_castshadow       () const { return val(typed_memory_view(m->nlight          * 1        , m->light_castshadow       )); }
+  val  light_bulbradius       () const { return val(typed_memory_view(m->nlight          * 1        , m->light_bulbradius       )); }
+  val  light_active           () const { return val(typed_memory_view(m->nlight          * 1        , m->light_active           )); }
+  val  light_pos              () const { return val(typed_memory_view(m->nlight          * 3        , m->light_pos              )); }
+  val  light_dir              () const { return val(typed_memory_view(m->nlight          * 3        , m->light_dir              )); }
+  val  light_poscom0          () const { return val(typed_memory_view(m->nlight          * 3        , m->light_poscom0          )); }
+  val  light_pos0             () const { return val(typed_memory_view(m->nlight          * 3        , m->light_pos0             )); }
+  val  light_dir0             () const { return val(typed_memory_view(m->nlight          * 3        , m->light_dir0             )); }
+  val  light_attenuation      () const { return val(typed_memory_view(m->nlight          * 3        , m->light_attenuation      )); }
+  val  light_cutoff           () const { return val(typed_memory_view(m->nlight          * 1        , m->light_cutoff           )); }
+  val  light_exponent         () const { return val(typed_memory_view(m->nlight          * 1        , m->light_exponent         )); }
+  val  light_ambient          () const { return val(typed_memory_view(m->nlight          * 3        , m->light_ambient          )); }
+  val  light_diffuse          () const { return val(typed_memory_view(m->nlight          * 3        , m->light_diffuse          )); }
+  val  light_specular         () const { return val(typed_memory_view(m->nlight          * 3        , m->light_specular         )); }
+  val  flex_contype           () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_contype           )); }
+  val  flex_conaffinity       () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_conaffinity       )); }
+  val  flex_condim            () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_condim            )); }
+  val  flex_priority          () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_priority          )); }
+  val  flex_solmix            () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_solmix            )); }
+  val  flex_solref            () const { return val(typed_memory_view(m->nflex           * mjNREF   , m->flex_solref            )); }
+  val  flex_solimp            () const { return val(typed_memory_view(m->nflex           * mjNIMP   , m->flex_solimp            )); }
+  val  flex_friction          () const { return val(typed_memory_view(m->nflex           * 3        , m->flex_friction          )); }
+  val  flex_margin            () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_margin            )); }
+  val  flex_gap               () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_gap               )); }
+  val  flex_internal          () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_internal          )); }
+  val  flex_selfcollide       () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_selfcollide       )); }
+  val  flex_activelayers      () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_activelayers      )); }
+  val  flex_dim               () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_dim               )); }
+  val  flex_matid             () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_matid             )); }
+  val  flex_group             () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_group             )); }
+  val  flex_interp            () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_interp            )); }
+  val  flex_nodeadr           () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_nodeadr           )); }
+  val  flex_nodenum           () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_nodenum           )); }
+  val  flex_vertadr           () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_vertadr           )); }
+  val  flex_vertnum           () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_vertnum           )); }
+  val  flex_edgeadr           () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_edgeadr           )); }
+  val  flex_edgenum           () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_edgenum           )); }
+  val  flex_elemadr           () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_elemadr           )); }
+  val  flex_elemnum           () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_elemnum           )); }
+  val  flex_elemdataadr       () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_elemdataadr       )); }
+  val  flex_elemedgeadr       () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_elemedgeadr       )); }
+  val  flex_shellnum          () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_shellnum          )); }
+  val  flex_shelldataadr      () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_shelldataadr      )); }
+  val  flex_evpairadr         () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_evpairadr         )); }
+  val  flex_evpairnum         () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_evpairnum         )); }
+  val  flex_texcoordadr       () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_texcoordadr       )); }
+  val  flex_nodebodyid        () const { return val(typed_memory_view(m->nflexnode       * 1        , m->flex_nodebodyid        )); }
+  val  flex_vertbodyid        () const { return val(typed_memory_view(m->nflexvert       * 1        , m->flex_vertbodyid        )); }
+  val  flex_edge              () const { return val(typed_memory_view(m->nflexedge       * 2        , m->flex_edge              )); }
+  val  flex_elem              () const { return val(typed_memory_view(m->nflexelemdata   * 1        , m->flex_elem              )); }
+  val  flex_elemtexcoord      () const { return val(typed_memory_view(m->nflexelemdata   * 1        , m->flex_elemtexcoord      )); }
+  val  flex_elemedge          () const { return val(typed_memory_view(m->nflexelemedge   * 1        , m->flex_elemedge          )); }
+  val  flex_elemlayer         () const { return val(typed_memory_view(m->nflexelem       * 1        , m->flex_elemlayer         )); }
+  val  flex_shell             () const { return val(typed_memory_view(m->nflexshelldata  * 1        , m->flex_shell             )); }
+  val  flex_evpair            () const { return val(typed_memory_view(m->nflexevpair     * 2        , m->flex_evpair            )); }
+  val  flex_vert              () const { return val(typed_memory_view(m->nflexvert       * 3        , m->flex_vert              )); }
+  val  flex_vert0             () const { return val(typed_memory_view(m->nflexvert       * 3        , m->flex_vert0             )); }
+  val  flex_node              () const { return val(typed_memory_view(m->nflexnode       * 3        , m->flex_node              )); }
+  val  flex_node0             () const { return val(typed_memory_view(m->nflexnode       * 3        , m->flex_node0             )); }
+  val  flexedge_length0       () const { return val(typed_memory_view(m->nflexedge       * 1        , m->flexedge_length0       )); }
+  val  flexedge_invweight0    () const { return val(typed_memory_view(m->nflexedge       * 1        , m->flexedge_invweight0    )); }
+  val  flex_radius            () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_radius            )); }
+  val  flex_stiffness         () const { return val(typed_memory_view(m->nflexelem       * 21       , m->flex_stiffness         )); }
+  val  flex_damping           () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_damping           )); }
+  val  flex_edgestiffness     () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_edgestiffness     )); }
+  val  flex_edgedamping       () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_edgedamping       )); }
+  val  flex_edgeequality      () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_edgeequality      )); }
+  val  flex_rigid             () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_rigid             )); }
+  val  flexedge_rigid         () const { return val(typed_memory_view(m->nflexedge       * 1        , m->flexedge_rigid         )); }
+  val  flex_centered          () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_centered          )); }
+  val  flex_flatskin          () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_flatskin          )); }
+  val  flex_bvhadr            () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_bvhadr            )); }
+  val  flex_bvhnum            () const { return val(typed_memory_view(m->nflex           * 1        , m->flex_bvhnum            )); }
+  val  flex_rgba              () const { return val(typed_memory_view(m->nflex           * 4        , m->flex_rgba              )); }
+  val  flex_texcoord          () const { return val(typed_memory_view(m->nflextexcoord   * 2        , m->flex_texcoord          )); }
+  val  mesh_vertadr           () const { return val(typed_memory_view(m->nmesh           * 1        , m->mesh_vertadr           )); }
+  val  mesh_vertnum           () const { return val(typed_memory_view(m->nmesh           * 1        , m->mesh_vertnum           )); }
+  val  mesh_normaladr         () const { return val(typed_memory_view(m->nmesh           * 1        , m->mesh_normaladr         )); }
+  val  mesh_normalnum         () const { return val(typed_memory_view(m->nmesh           * 1        , m->mesh_normalnum         )); }
+  val  mesh_texcoordadr       () const { return val(typed_memory_view(m->nmesh           * 1        , m->mesh_texcoordadr       )); }
+  val  mesh_texcoordnum       () const { return val(typed_memory_view(m->nmesh           * 1        , m->mesh_texcoordnum       )); }
+  val  mesh_faceadr           () const { return val(typed_memory_view(m->nmesh           * 1        , m->mesh_faceadr           )); }
+  val  mesh_facenum           () const { return val(typed_memory_view(m->nmesh           * 1        , m->mesh_facenum           )); }
+  val  mesh_bvhadr            () const { return val(typed_memory_view(m->nmesh           * 1        , m->mesh_bvhadr            )); }
+  val  mesh_bvhnum            () const { return val(typed_memory_view(m->nmesh           * 1        , m->mesh_bvhnum            )); }
+  val  mesh_graphadr          () const { return val(typed_memory_view(m->nmesh           * 1        , m->mesh_graphadr          )); }
+  val  mesh_scale             () const { return val(typed_memory_view(m->nmesh           * 3        , m->mesh_scale             )); }
+  val  mesh_pos               () const { return val(typed_memory_view(m->nmesh           * 3        , m->mesh_pos               )); }
+  val  mesh_quat              () const { return val(typed_memory_view(m->nmesh           * 4        , m->mesh_quat              )); }
 
 private:
   mjModel *m;
@@ -143,6 +350,111 @@ public:
   }
 
   // MJDATA_DEFINITIONS
+  val  qpos                   () const { return val(typed_memory_view(_model->ptr()->nq              * 1        , _state->ptr()->qpos                   )); }
+  val  qvel                   () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->qvel                   )); }
+  val  act                    () const { return val(typed_memory_view(_model->ptr()->na              * 1        , _state->ptr()->act                    )); }
+  val  qacc_warmstart         () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->qacc_warmstart         )); }
+  val  plugin_state           () const { return val(typed_memory_view(_model->ptr()->npluginstate    * 1        , _state->ptr()->plugin_state           )); }
+  val  ctrl                   () const { return val(typed_memory_view(_model->ptr()->nu              * 1        , _state->ptr()->ctrl                   )); }
+  val  qfrc_applied           () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->qfrc_applied           )); }
+  val  xfrc_applied           () const { return val(typed_memory_view(_model->ptr()->nbody           * 6        , _state->ptr()->xfrc_applied           )); }
+  val  eq_active              () const { return val(typed_memory_view(_model->ptr()->neq             * 1        , _state->ptr()->eq_active              )); }
+  val  mocap_pos              () const { return val(typed_memory_view(_model->ptr()->nmocap          * 3        , _state->ptr()->mocap_pos              )); }
+  val  mocap_quat             () const { return val(typed_memory_view(_model->ptr()->nmocap          * 4        , _state->ptr()->mocap_quat             )); }
+  val  qacc                   () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->qacc                   )); }
+  val  act_dot                () const { return val(typed_memory_view(_model->ptr()->na              * 1        , _state->ptr()->act_dot                )); }
+  val  userdata               () const { return val(typed_memory_view(_model->ptr()->nuserdata       * 1        , _state->ptr()->userdata               )); }
+  val  sensordata             () const { return val(typed_memory_view(_model->ptr()->nsensordata     * 1        , _state->ptr()->sensordata             )); }
+  val  plugin                 () const { return val(typed_memory_view(_model->ptr()->nplugin         * 1        , _state->ptr()->plugin                 )); }
+  val  plugin_data            () const { return val(typed_memory_view(_model->ptr()->nplugin         * 1        , _state->ptr()->plugin_data            )); }
+  val  xpos                   () const { return val(typed_memory_view(_model->ptr()->nbody           * 3        , _state->ptr()->xpos                   )); }
+  val  xquat                  () const { return val(typed_memory_view(_model->ptr()->nbody           * 4        , _state->ptr()->xquat                  )); }
+  val  xmat                   () const { return val(typed_memory_view(_model->ptr()->nbody           * 9        , _state->ptr()->xmat                   )); }
+  val  xipos                  () const { return val(typed_memory_view(_model->ptr()->nbody           * 3        , _state->ptr()->xipos                  )); }
+  val  ximat                  () const { return val(typed_memory_view(_model->ptr()->nbody           * 9        , _state->ptr()->ximat                  )); }
+  val  xanchor                () const { return val(typed_memory_view(_model->ptr()->njnt            * 3        , _state->ptr()->xanchor                )); }
+  val  xaxis                  () const { return val(typed_memory_view(_model->ptr()->njnt            * 3        , _state->ptr()->xaxis                  )); }
+  val  geom_xpos              () const { return val(typed_memory_view(_model->ptr()->ngeom           * 3        , _state->ptr()->geom_xpos              )); }
+  val  geom_xmat              () const { return val(typed_memory_view(_model->ptr()->ngeom           * 9        , _state->ptr()->geom_xmat              )); }
+  val  site_xpos              () const { return val(typed_memory_view(_model->ptr()->nsite           * 3        , _state->ptr()->site_xpos              )); }
+  val  site_xmat              () const { return val(typed_memory_view(_model->ptr()->nsite           * 9        , _state->ptr()->site_xmat              )); }
+  val  cam_xpos               () const { return val(typed_memory_view(_model->ptr()->ncam            * 3        , _state->ptr()->cam_xpos               )); }
+  val  cam_xmat               () const { return val(typed_memory_view(_model->ptr()->ncam            * 9        , _state->ptr()->cam_xmat               )); }
+  val  light_xpos             () const { return val(typed_memory_view(_model->ptr()->nlight          * 3        , _state->ptr()->light_xpos             )); }
+  val  light_xdir             () const { return val(typed_memory_view(_model->ptr()->nlight          * 3        , _state->ptr()->light_xdir             )); }
+  val  subtree_com            () const { return val(typed_memory_view(_model->ptr()->nbody           * 3        , _state->ptr()->subtree_com            )); }
+  val  cdof                   () const { return val(typed_memory_view(_model->ptr()->nv              * 6        , _state->ptr()->cdof                   )); }
+  val  cinert                 () const { return val(typed_memory_view(_model->ptr()->nbody           * 10       , _state->ptr()->cinert                 )); }
+  val  flexvert_xpos          () const { return val(typed_memory_view(_model->ptr()->nflexvert       * 3        , _state->ptr()->flexvert_xpos          )); }
+  val  flexelem_aabb          () const { return val(typed_memory_view(_model->ptr()->nflexelem       * 6        , _state->ptr()->flexelem_aabb          )); }
+  val  flexedge_J_rownnz      () const { return val(typed_memory_view(_model->ptr()->nflexedge       * 1        , _state->ptr()->flexedge_J_rownnz      )); }
+  val  flexedge_J_rowadr      () const { return val(typed_memory_view(_model->ptr()->nflexedge       * 1        , _state->ptr()->flexedge_J_rowadr      )); }
+  val  flexedge_J_colind      () const { return val(typed_memory_view(_model->ptr()->nflexedge       * _model->ptr()->nv, _state->ptr()->flexedge_J_colind      )); }
+  val  flexedge_J             () const { return val(typed_memory_view(_model->ptr()->nflexedge       * _model->ptr()->nv, _state->ptr()->flexedge_J             )); }
+  val  flexedge_length        () const { return val(typed_memory_view(_model->ptr()->nflexedge       * 1        , _state->ptr()->flexedge_length        )); }
+  val  ten_wrapadr            () const { return val(typed_memory_view(_model->ptr()->ntendon         * 1        , _state->ptr()->ten_wrapadr            )); }
+  val  ten_wrapnum            () const { return val(typed_memory_view(_model->ptr()->ntendon         * 1        , _state->ptr()->ten_wrapnum            )); }
+  val  ten_J_rownnz           () const { return val(typed_memory_view(_model->ptr()->ntendon         * 1        , _state->ptr()->ten_J_rownnz           )); }
+  val  ten_J_rowadr           () const { return val(typed_memory_view(_model->ptr()->ntendon         * 1        , _state->ptr()->ten_J_rowadr           )); }
+  val  ten_J_colind           () const { return val(typed_memory_view(_model->ptr()->ntendon         * _model->ptr()->nv, _state->ptr()->ten_J_colind           )); }
+  val  ten_length             () const { return val(typed_memory_view(_model->ptr()->ntendon         * 1        , _state->ptr()->ten_length             )); }
+  val  ten_J                  () const { return val(typed_memory_view(_model->ptr()->ntendon         * _model->ptr()->nv, _state->ptr()->ten_J                  )); }
+  val  wrap_obj               () const { return val(typed_memory_view(_model->ptr()->nwrap           * 2        , _state->ptr()->wrap_obj               )); }
+  val  wrap_xpos              () const { return val(typed_memory_view(_model->ptr()->nwrap           * 6        , _state->ptr()->wrap_xpos              )); }
+  val  actuator_length        () const { return val(typed_memory_view(_model->ptr()->nu              * 1        , _state->ptr()->actuator_length        )); }
+  val  moment_rownnz          () const { return val(typed_memory_view(_model->ptr()->nu              * 1        , _state->ptr()->moment_rownnz          )); }
+  val  moment_rowadr          () const { return val(typed_memory_view(_model->ptr()->nu              * 1        , _state->ptr()->moment_rowadr          )); }
+  val  moment_colind          () const { return val(typed_memory_view(_model->ptr()->nJmom           * 1        , _state->ptr()->moment_colind          )); }
+  val  actuator_moment        () const { return val(typed_memory_view(_model->ptr()->nJmom           * 1        , _state->ptr()->actuator_moment        )); }
+  val  crb                    () const { return val(typed_memory_view(_model->ptr()->nbody           * 10       , _state->ptr()->crb                    )); }
+  val  qM                     () const { return val(typed_memory_view(_model->ptr()->nM              * 1        , _state->ptr()->qM                     )); }
+  val  qLD                    () const { return val(typed_memory_view(_model->ptr()->nM              * 1        , _state->ptr()->qLD                    )); }
+  val  qLDiagInv              () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->qLDiagInv              )); }
+  val  bvh_aabb_dyn           () const { return val(typed_memory_view(_model->ptr()->nbvhdynamic     * 6        , _state->ptr()->bvh_aabb_dyn           )); }
+  val  bvh_active             () const { return val(typed_memory_view(_model->ptr()->nbvh            * 1        , _state->ptr()->bvh_active             )); }
+  val  flexedge_velocity      () const { return val(typed_memory_view(_model->ptr()->nflexedge       * 1        , _state->ptr()->flexedge_velocity      )); }
+  val  ten_velocity           () const { return val(typed_memory_view(_model->ptr()->ntendon         * 1        , _state->ptr()->ten_velocity           )); }
+  val  actuator_velocity      () const { return val(typed_memory_view(_model->ptr()->nu              * 1        , _state->ptr()->actuator_velocity      )); }
+  val  cvel                   () const { return val(typed_memory_view(_model->ptr()->nbody           * 6        , _state->ptr()->cvel                   )); }
+  val  cdof_dot               () const { return val(typed_memory_view(_model->ptr()->nv              * 6        , _state->ptr()->cdof_dot               )); }
+  val  qfrc_bias              () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->qfrc_bias              )); }
+  val  qfrc_spring            () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->qfrc_spring            )); }
+  val  qfrc_damper            () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->qfrc_damper            )); }
+  val  qfrc_gravcomp          () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->qfrc_gravcomp          )); }
+  val  qfrc_fluid             () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->qfrc_fluid             )); }
+  val  qfrc_passive           () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->qfrc_passive           )); }
+  val  subtree_linvel         () const { return val(typed_memory_view(_model->ptr()->nbody           * 3        , _state->ptr()->subtree_linvel         )); }
+  val  subtree_angmom         () const { return val(typed_memory_view(_model->ptr()->nbody           * 3        , _state->ptr()->subtree_angmom         )); }
+  val  qH                     () const { return val(typed_memory_view(_model->ptr()->nM              * 1        , _state->ptr()->qH                     )); }
+  val  qHDiagInv              () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->qHDiagInv              )); }
+  val  B_rownnz               () const { return val(typed_memory_view(_model->ptr()->nbody           * 1        , _state->ptr()->B_rownnz               )); }
+  val  B_rowadr               () const { return val(typed_memory_view(_model->ptr()->nbody           * 1        , _state->ptr()->B_rowadr               )); }
+  val  B_colind               () const { return val(typed_memory_view(_model->ptr()->nB              * 1        , _state->ptr()->B_colind               )); }
+  val  M_rownnz               () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->M_rownnz               )); }
+  val  M_rowadr               () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->M_rowadr               )); }
+  val  M_colind               () const { return val(typed_memory_view(_model->ptr()->nM              * 1        , _state->ptr()->M_colind               )); }
+  val  mapM2M                 () const { return val(typed_memory_view(_model->ptr()->nM              * 1        , _state->ptr()->mapM2M                 )); }
+  val  C_rownnz               () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->C_rownnz               )); }
+  val  C_rowadr               () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->C_rowadr               )); }
+  val  C_colind               () const { return val(typed_memory_view(_model->ptr()->nC              * 1        , _state->ptr()->C_colind               )); }
+  val  mapM2C                 () const { return val(typed_memory_view(_model->ptr()->nC              * 1        , _state->ptr()->mapM2C                 )); }
+  val  D_rownnz               () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->D_rownnz               )); }
+  val  D_rowadr               () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->D_rowadr               )); }
+  val  D_diag                 () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->D_diag                 )); }
+  val  D_colind               () const { return val(typed_memory_view(_model->ptr()->nD              * 1        , _state->ptr()->D_colind               )); }
+  val  mapM2D                 () const { return val(typed_memory_view(_model->ptr()->nD              * 1        , _state->ptr()->mapM2D                 )); }
+  val  mapD2M                 () const { return val(typed_memory_view(_model->ptr()->nM              * 1        , _state->ptr()->mapD2M                 )); }
+  val  qDeriv                 () const { return val(typed_memory_view(_model->ptr()->nD              * 1        , _state->ptr()->qDeriv                 )); }
+  val  qLU                    () const { return val(typed_memory_view(_model->ptr()->nD              * 1        , _state->ptr()->qLU                    )); }
+  val  actuator_force         () const { return val(typed_memory_view(_model->ptr()->nu              * 1        , _state->ptr()->actuator_force         )); }
+  val  qfrc_actuator          () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->qfrc_actuator          )); }
+  val  qfrc_smooth            () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->qfrc_smooth            )); }
+  val  qacc_smooth            () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->qacc_smooth            )); }
+  val  qfrc_constraint        () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->qfrc_constraint        )); }
+  val  qfrc_inverse           () const { return val(typed_memory_view(_model->ptr()->nv              * 1        , _state->ptr()->qfrc_inverse           )); }
+  val  cacc                   () const { return val(typed_memory_view(_model->ptr()->nbody           * 6        , _state->ptr()->cacc                   )); }
+  val  cfrc_int               () const { return val(typed_memory_view(_model->ptr()->nbody           * 6        , _state->ptr()->cfrc_int               )); }
+  val  cfrc_ext               () const { return val(typed_memory_view(_model->ptr()->nbody           * 6        , _state->ptr()->cfrc_ext               )); }
   void   freeLastXML         (                    ) { return mj_freeLastXML              (                    ); }
   void   step                (                    ) { return mj_step                     (_model->ptr(), _state->ptr()); }
   void   step1               (                    ) { return mj_step1                    (_model->ptr(), _state->ptr()); }
@@ -582,7 +894,214 @@ EMSCRIPTEN_BINDINGS(mujoco_wasm) {
       .function("getVal"          , &Model::getVal      )
       .function("getOptions"      , &Model::getOptions  )
       // MJMODEL_BINDINGS
-
+      .property("qpos0"                 , &Model::qpos0                 )
+      .property("qpos_spring"           , &Model::qpos_spring           )
+      .property("body_parentid"         , &Model::body_parentid         )
+      .property("body_rootid"           , &Model::body_rootid           )
+      .property("body_weldid"           , &Model::body_weldid           )
+      .property("body_mocapid"          , &Model::body_mocapid          )
+      .property("body_jntnum"           , &Model::body_jntnum           )
+      .property("body_jntadr"           , &Model::body_jntadr           )
+      .property("body_dofnum"           , &Model::body_dofnum           )
+      .property("body_dofadr"           , &Model::body_dofadr           )
+      .property("body_treeid"           , &Model::body_treeid           )
+      .property("body_geomnum"          , &Model::body_geomnum          )
+      .property("body_geomadr"          , &Model::body_geomadr          )
+      .property("body_simple"           , &Model::body_simple           )
+      .property("body_sameframe"        , &Model::body_sameframe        )
+      .property("body_pos"              , &Model::body_pos              )
+      .property("body_quat"             , &Model::body_quat             )
+      .property("body_ipos"             , &Model::body_ipos             )
+      .property("body_iquat"            , &Model::body_iquat            )
+      .property("body_mass"             , &Model::body_mass             )
+      .property("body_subtreemass"      , &Model::body_subtreemass      )
+      .property("body_inertia"          , &Model::body_inertia          )
+      .property("body_invweight0"       , &Model::body_invweight0       )
+      .property("body_gravcomp"         , &Model::body_gravcomp         )
+      .property("body_margin"           , &Model::body_margin           )
+      .property("body_user"             , &Model::body_user             )
+      .property("body_plugin"           , &Model::body_plugin           )
+      .property("body_contype"          , &Model::body_contype          )
+      .property("body_conaffinity"      , &Model::body_conaffinity      )
+      .property("body_bvhadr"           , &Model::body_bvhadr           )
+      .property("body_bvhnum"           , &Model::body_bvhnum           )
+      .property("bvh_depth"             , &Model::bvh_depth             )
+      .property("bvh_child"             , &Model::bvh_child             )
+      .property("bvh_nodeid"            , &Model::bvh_nodeid            )
+      .property("bvh_aabb"              , &Model::bvh_aabb              )
+      .property("jnt_type"              , &Model::jnt_type              )
+      .property("jnt_qposadr"           , &Model::jnt_qposadr           )
+      .property("jnt_dofadr"            , &Model::jnt_dofadr            )
+      .property("jnt_bodyid"            , &Model::jnt_bodyid            )
+      .property("jnt_group"             , &Model::jnt_group             )
+      .property("jnt_limited"           , &Model::jnt_limited           )
+      .property("jnt_actfrclimited"     , &Model::jnt_actfrclimited     )
+      .property("jnt_actgravcomp"       , &Model::jnt_actgravcomp       )
+      .property("jnt_solref"            , &Model::jnt_solref            )
+      .property("jnt_solimp"            , &Model::jnt_solimp            )
+      .property("jnt_pos"               , &Model::jnt_pos               )
+      .property("jnt_axis"              , &Model::jnt_axis              )
+      .property("jnt_stiffness"         , &Model::jnt_stiffness         )
+      .property("jnt_range"             , &Model::jnt_range             )
+      .property("jnt_actfrcrange"       , &Model::jnt_actfrcrange       )
+      .property("jnt_margin"            , &Model::jnt_margin            )
+      .property("jnt_user"              , &Model::jnt_user              )
+      .property("dof_bodyid"            , &Model::dof_bodyid            )
+      .property("dof_jntid"             , &Model::dof_jntid             )
+      .property("dof_parentid"          , &Model::dof_parentid          )
+      .property("dof_treeid"            , &Model::dof_treeid            )
+      .property("dof_Madr"              , &Model::dof_Madr              )
+      .property("dof_simplenum"         , &Model::dof_simplenum         )
+      .property("dof_solref"            , &Model::dof_solref            )
+      .property("dof_solimp"            , &Model::dof_solimp            )
+      .property("dof_frictionloss"      , &Model::dof_frictionloss      )
+      .property("dof_armature"          , &Model::dof_armature          )
+      .property("dof_damping"           , &Model::dof_damping           )
+      .property("dof_invweight0"        , &Model::dof_invweight0        )
+      .property("dof_M0"                , &Model::dof_M0                )
+      .property("geom_type"             , &Model::geom_type             )
+      .property("geom_contype"          , &Model::geom_contype          )
+      .property("geom_conaffinity"      , &Model::geom_conaffinity      )
+      .property("geom_condim"           , &Model::geom_condim           )
+      .property("geom_bodyid"           , &Model::geom_bodyid           )
+      .property("geom_dataid"           , &Model::geom_dataid           )
+      .property("geom_matid"            , &Model::geom_matid            )
+      .property("geom_group"            , &Model::geom_group            )
+      .property("geom_priority"         , &Model::geom_priority         )
+      .property("geom_plugin"           , &Model::geom_plugin           )
+      .property("geom_sameframe"        , &Model::geom_sameframe        )
+      .property("geom_solmix"           , &Model::geom_solmix           )
+      .property("geom_solref"           , &Model::geom_solref           )
+      .property("geom_solimp"           , &Model::geom_solimp           )
+      .property("geom_size"             , &Model::geom_size             )
+      .property("geom_aabb"             , &Model::geom_aabb             )
+      .property("geom_rbound"           , &Model::geom_rbound           )
+      .property("geom_pos"              , &Model::geom_pos              )
+      .property("geom_quat"             , &Model::geom_quat             )
+      .property("geom_friction"         , &Model::geom_friction         )
+      .property("geom_margin"           , &Model::geom_margin           )
+      .property("geom_gap"              , &Model::geom_gap              )
+      .property("geom_fluid"            , &Model::geom_fluid            )
+      .property("geom_user"             , &Model::geom_user             )
+      .property("geom_rgba"             , &Model::geom_rgba             )
+      .property("site_type"             , &Model::site_type             )
+      .property("site_bodyid"           , &Model::site_bodyid           )
+      .property("site_matid"            , &Model::site_matid            )
+      .property("site_group"            , &Model::site_group            )
+      .property("site_sameframe"        , &Model::site_sameframe        )
+      .property("site_size"             , &Model::site_size             )
+      .property("site_pos"              , &Model::site_pos              )
+      .property("site_quat"             , &Model::site_quat             )
+      .property("site_user"             , &Model::site_user             )
+      .property("site_rgba"             , &Model::site_rgba             )
+      .property("cam_mode"              , &Model::cam_mode              )
+      .property("cam_bodyid"            , &Model::cam_bodyid            )
+      .property("cam_targetbodyid"      , &Model::cam_targetbodyid      )
+      .property("cam_pos"               , &Model::cam_pos               )
+      .property("cam_quat"              , &Model::cam_quat              )
+      .property("cam_poscom0"           , &Model::cam_poscom0           )
+      .property("cam_pos0"              , &Model::cam_pos0              )
+      .property("cam_mat0"              , &Model::cam_mat0              )
+      .property("cam_orthographic"      , &Model::cam_orthographic      )
+      .property("cam_fovy"              , &Model::cam_fovy              )
+      .property("cam_ipd"               , &Model::cam_ipd               )
+      .property("cam_resolution"        , &Model::cam_resolution        )
+      .property("cam_sensorsize"        , &Model::cam_sensorsize        )
+      .property("cam_intrinsic"         , &Model::cam_intrinsic         )
+      .property("cam_user"              , &Model::cam_user              )
+      .property("light_mode"            , &Model::light_mode            )
+      .property("light_bodyid"          , &Model::light_bodyid          )
+      .property("light_targetbodyid"    , &Model::light_targetbodyid    )
+      .property("light_directional"     , &Model::light_directional     )
+      .property("light_castshadow"      , &Model::light_castshadow      )
+      .property("light_bulbradius"      , &Model::light_bulbradius      )
+      .property("light_active"          , &Model::light_active          )
+      .property("light_pos"             , &Model::light_pos             )
+      .property("light_dir"             , &Model::light_dir             )
+      .property("light_poscom0"         , &Model::light_poscom0         )
+      .property("light_pos0"            , &Model::light_pos0            )
+      .property("light_dir0"            , &Model::light_dir0            )
+      .property("light_attenuation"     , &Model::light_attenuation     )
+      .property("light_cutoff"          , &Model::light_cutoff          )
+      .property("light_exponent"        , &Model::light_exponent        )
+      .property("light_ambient"         , &Model::light_ambient         )
+      .property("light_diffuse"         , &Model::light_diffuse         )
+      .property("light_specular"        , &Model::light_specular        )
+      .property("flex_contype"          , &Model::flex_contype          )
+      .property("flex_conaffinity"      , &Model::flex_conaffinity      )
+      .property("flex_condim"           , &Model::flex_condim           )
+      .property("flex_priority"         , &Model::flex_priority         )
+      .property("flex_solmix"           , &Model::flex_solmix           )
+      .property("flex_solref"           , &Model::flex_solref           )
+      .property("flex_solimp"           , &Model::flex_solimp           )
+      .property("flex_friction"         , &Model::flex_friction         )
+      .property("flex_margin"           , &Model::flex_margin           )
+      .property("flex_gap"              , &Model::flex_gap              )
+      .property("flex_internal"         , &Model::flex_internal         )
+      .property("flex_selfcollide"      , &Model::flex_selfcollide      )
+      .property("flex_activelayers"     , &Model::flex_activelayers     )
+      .property("flex_dim"              , &Model::flex_dim              )
+      .property("flex_matid"            , &Model::flex_matid            )
+      .property("flex_group"            , &Model::flex_group            )
+      .property("flex_interp"           , &Model::flex_interp           )
+      .property("flex_nodeadr"          , &Model::flex_nodeadr          )
+      .property("flex_nodenum"          , &Model::flex_nodenum          )
+      .property("flex_vertadr"          , &Model::flex_vertadr          )
+      .property("flex_vertnum"          , &Model::flex_vertnum          )
+      .property("flex_edgeadr"          , &Model::flex_edgeadr          )
+      .property("flex_edgenum"          , &Model::flex_edgenum          )
+      .property("flex_elemadr"          , &Model::flex_elemadr          )
+      .property("flex_elemnum"          , &Model::flex_elemnum          )
+      .property("flex_elemdataadr"      , &Model::flex_elemdataadr      )
+      .property("flex_elemedgeadr"      , &Model::flex_elemedgeadr      )
+      .property("flex_shellnum"         , &Model::flex_shellnum         )
+      .property("flex_shelldataadr"     , &Model::flex_shelldataadr     )
+      .property("flex_evpairadr"        , &Model::flex_evpairadr        )
+      .property("flex_evpairnum"        , &Model::flex_evpairnum        )
+      .property("flex_texcoordadr"      , &Model::flex_texcoordadr      )
+      .property("flex_nodebodyid"       , &Model::flex_nodebodyid       )
+      .property("flex_vertbodyid"       , &Model::flex_vertbodyid       )
+      .property("flex_edge"             , &Model::flex_edge             )
+      .property("flex_elem"             , &Model::flex_elem             )
+      .property("flex_elemtexcoord"     , &Model::flex_elemtexcoord     )
+      .property("flex_elemedge"         , &Model::flex_elemedge         )
+      .property("flex_elemlayer"        , &Model::flex_elemlayer        )
+      .property("flex_shell"            , &Model::flex_shell            )
+      .property("flex_evpair"           , &Model::flex_evpair           )
+      .property("flex_vert"             , &Model::flex_vert             )
+      .property("flex_vert0"            , &Model::flex_vert0            )
+      .property("flex_node"             , &Model::flex_node             )
+      .property("flex_node0"            , &Model::flex_node0            )
+      .property("flexedge_length0"      , &Model::flexedge_length0      )
+      .property("flexedge_invweight0"   , &Model::flexedge_invweight0   )
+      .property("flex_radius"           , &Model::flex_radius           )
+      .property("flex_stiffness"        , &Model::flex_stiffness        )
+      .property("flex_damping"          , &Model::flex_damping          )
+      .property("flex_edgestiffness"    , &Model::flex_edgestiffness    )
+      .property("flex_edgedamping"      , &Model::flex_edgedamping      )
+      .property("flex_edgeequality"     , &Model::flex_edgeequality     )
+      .property("flex_rigid"            , &Model::flex_rigid            )
+      .property("flexedge_rigid"        , &Model::flexedge_rigid        )
+      .property("flex_centered"         , &Model::flex_centered         )
+      .property("flex_flatskin"         , &Model::flex_flatskin         )
+      .property("flex_bvhadr"           , &Model::flex_bvhadr           )
+      .property("flex_bvhnum"           , &Model::flex_bvhnum           )
+      .property("flex_rgba"             , &Model::flex_rgba             )
+      .property("flex_texcoord"         , &Model::flex_texcoord         )
+      .property("mesh_vertadr"          , &Model::mesh_vertadr          )
+      .property("mesh_vertnum"          , &Model::mesh_vertnum          )
+      .property("mesh_normaladr"        , &Model::mesh_normaladr        )
+      .property("mesh_normalnum"        , &Model::mesh_normalnum        )
+      .property("mesh_texcoordadr"      , &Model::mesh_texcoordadr      )
+      .property("mesh_texcoordnum"      , &Model::mesh_texcoordnum      )
+      .property("mesh_faceadr"          , &Model::mesh_faceadr          )
+      .property("mesh_facenum"          , &Model::mesh_facenum          )
+      .property("mesh_bvhadr"           , &Model::mesh_bvhadr           )
+      .property("mesh_bvhnum"           , &Model::mesh_bvhnum           )
+      .property("mesh_graphadr"         , &Model::mesh_graphadr         )
+      .property("mesh_scale"            , &Model::mesh_scale            )
+      .property("mesh_pos"              , &Model::mesh_pos              )
+      .property("mesh_quat"             , &Model::mesh_quat             )
 ;
 
   class_<State>("State")
@@ -599,6 +1118,111 @@ EMSCRIPTEN_BINDINGS(mujoco_wasm) {
       .function("applyForce", &Simulation::applyForce)
       .function("applyPose" , &Simulation::applyPose )
       // MJDATA_BINDINGS
+      .property("qpos"                  , &Simulation::qpos                  )
+      .property("qvel"                  , &Simulation::qvel                  )
+      .property("act"                   , &Simulation::act                   )
+      .property("qacc_warmstart"        , &Simulation::qacc_warmstart        )
+      .property("plugin_state"          , &Simulation::plugin_state          )
+      .property("ctrl"                  , &Simulation::ctrl                  )
+      .property("qfrc_applied"          , &Simulation::qfrc_applied          )
+      .property("xfrc_applied"          , &Simulation::xfrc_applied          )
+      .property("eq_active"             , &Simulation::eq_active             )
+      .property("mocap_pos"             , &Simulation::mocap_pos             )
+      .property("mocap_quat"            , &Simulation::mocap_quat            )
+      .property("qacc"                  , &Simulation::qacc                  )
+      .property("act_dot"               , &Simulation::act_dot               )
+      .property("userdata"              , &Simulation::userdata              )
+      .property("sensordata"            , &Simulation::sensordata            )
+      .property("plugin"                , &Simulation::plugin                )
+      .property("plugin_data"           , &Simulation::plugin_data           )
+      .property("xpos"                  , &Simulation::xpos                  )
+      .property("xquat"                 , &Simulation::xquat                 )
+      .property("xmat"                  , &Simulation::xmat                  )
+      .property("xipos"                 , &Simulation::xipos                 )
+      .property("ximat"                 , &Simulation::ximat                 )
+      .property("xanchor"               , &Simulation::xanchor               )
+      .property("xaxis"                 , &Simulation::xaxis                 )
+      .property("geom_xpos"             , &Simulation::geom_xpos             )
+      .property("geom_xmat"             , &Simulation::geom_xmat             )
+      .property("site_xpos"             , &Simulation::site_xpos             )
+      .property("site_xmat"             , &Simulation::site_xmat             )
+      .property("cam_xpos"              , &Simulation::cam_xpos              )
+      .property("cam_xmat"              , &Simulation::cam_xmat              )
+      .property("light_xpos"            , &Simulation::light_xpos            )
+      .property("light_xdir"            , &Simulation::light_xdir            )
+      .property("subtree_com"           , &Simulation::subtree_com           )
+      .property("cdof"                  , &Simulation::cdof                  )
+      .property("cinert"                , &Simulation::cinert                )
+      .property("flexvert_xpos"         , &Simulation::flexvert_xpos         )
+      .property("flexelem_aabb"         , &Simulation::flexelem_aabb         )
+      .property("flexedge_J_rownnz"     , &Simulation::flexedge_J_rownnz     )
+      .property("flexedge_J_rowadr"     , &Simulation::flexedge_J_rowadr     )
+      .property("flexedge_J_colind"     , &Simulation::flexedge_J_colind     )
+      .property("flexedge_J"            , &Simulation::flexedge_J            )
+      .property("flexedge_length"       , &Simulation::flexedge_length       )
+      .property("ten_wrapadr"           , &Simulation::ten_wrapadr           )
+      .property("ten_wrapnum"           , &Simulation::ten_wrapnum           )
+      .property("ten_J_rownnz"          , &Simulation::ten_J_rownnz          )
+      .property("ten_J_rowadr"          , &Simulation::ten_J_rowadr          )
+      .property("ten_J_colind"          , &Simulation::ten_J_colind          )
+      .property("ten_length"            , &Simulation::ten_length            )
+      .property("ten_J"                 , &Simulation::ten_J                 )
+      .property("wrap_obj"              , &Simulation::wrap_obj              )
+      .property("wrap_xpos"             , &Simulation::wrap_xpos             )
+      .property("actuator_length"       , &Simulation::actuator_length       )
+      .property("moment_rownnz"         , &Simulation::moment_rownnz         )
+      .property("moment_rowadr"         , &Simulation::moment_rowadr         )
+      .property("moment_colind"         , &Simulation::moment_colind         )
+      .property("actuator_moment"       , &Simulation::actuator_moment       )
+      .property("crb"                   , &Simulation::crb                   )
+      .property("qM"                    , &Simulation::qM                    )
+      .property("qLD"                   , &Simulation::qLD                   )
+      .property("qLDiagInv"             , &Simulation::qLDiagInv             )
+      .property("bvh_aabb_dyn"          , &Simulation::bvh_aabb_dyn          )
+      .property("bvh_active"            , &Simulation::bvh_active            )
+      .property("flexedge_velocity"     , &Simulation::flexedge_velocity     )
+      .property("ten_velocity"          , &Simulation::ten_velocity          )
+      .property("actuator_velocity"     , &Simulation::actuator_velocity     )
+      .property("cvel"                  , &Simulation::cvel                  )
+      .property("cdof_dot"              , &Simulation::cdof_dot              )
+      .property("qfrc_bias"             , &Simulation::qfrc_bias             )
+      .property("qfrc_spring"           , &Simulation::qfrc_spring           )
+      .property("qfrc_damper"           , &Simulation::qfrc_damper           )
+      .property("qfrc_gravcomp"         , &Simulation::qfrc_gravcomp         )
+      .property("qfrc_fluid"            , &Simulation::qfrc_fluid            )
+      .property("qfrc_passive"          , &Simulation::qfrc_passive          )
+      .property("subtree_linvel"        , &Simulation::subtree_linvel        )
+      .property("subtree_angmom"        , &Simulation::subtree_angmom        )
+      .property("qH"                    , &Simulation::qH                    )
+      .property("qHDiagInv"             , &Simulation::qHDiagInv             )
+      .property("B_rownnz"              , &Simulation::B_rownnz              )
+      .property("B_rowadr"              , &Simulation::B_rowadr              )
+      .property("B_colind"              , &Simulation::B_colind              )
+      .property("M_rownnz"              , &Simulation::M_rownnz              )
+      .property("M_rowadr"              , &Simulation::M_rowadr              )
+      .property("M_colind"              , &Simulation::M_colind              )
+      .property("mapM2M"                , &Simulation::mapM2M                )
+      .property("C_rownnz"              , &Simulation::C_rownnz              )
+      .property("C_rowadr"              , &Simulation::C_rowadr              )
+      .property("C_colind"              , &Simulation::C_colind              )
+      .property("mapM2C"                , &Simulation::mapM2C                )
+      .property("D_rownnz"              , &Simulation::D_rownnz              )
+      .property("D_rowadr"              , &Simulation::D_rowadr              )
+      .property("D_diag"                , &Simulation::D_diag                )
+      .property("D_colind"              , &Simulation::D_colind              )
+      .property("mapM2D"                , &Simulation::mapM2D                )
+      .property("mapD2M"                , &Simulation::mapD2M                )
+      .property("qDeriv"                , &Simulation::qDeriv                )
+      .property("qLU"                   , &Simulation::qLU                   )
+      .property("actuator_force"        , &Simulation::actuator_force        )
+      .property("qfrc_actuator"         , &Simulation::qfrc_actuator         )
+      .property("qfrc_smooth"           , &Simulation::qfrc_smooth           )
+      .property("qacc_smooth"           , &Simulation::qacc_smooth           )
+      .property("qfrc_constraint"       , &Simulation::qfrc_constraint       )
+      .property("qfrc_inverse"          , &Simulation::qfrc_inverse          )
+      .property("cacc"                  , &Simulation::cacc                  )
+      .property("cfrc_int"              , &Simulation::cfrc_int              )
+      .property("cfrc_ext"              , &Simulation::cfrc_ext              )
       .function("freeLastXML"           , &Simulation::freeLastXML           )
       .function("step"                  , &Simulation::step                  )
       .function("step1"                 , &Simulation::step1                 )
